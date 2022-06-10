@@ -6,7 +6,8 @@
  * @returns index of the search key if found, otherwise a negative value.
  */
 
-// 'export default' is added for testing
+
+// Correct inputs are assumed; you might need to test if inputs are valid in your use case.
 export default function binarySearch(arr, key) {
   let startIndex = 0
   let endIndex = arr.length - 1
@@ -25,3 +26,5 @@ export default function binarySearch(arr, key) {
 
   return -1 - midIndex
 }
+
+// Time Complexity: O(logn) (Worst-case analysis)
