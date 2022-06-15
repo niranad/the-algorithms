@@ -4,34 +4,34 @@
  * @returns true if array is sorted, false otherwise.
  */
 export default function isArraySorted(arr) {
-  if (arr.length === 1 || arr.length === 0) return true
+  if (arr.length === 1 || arr.length === 0) return true;
 
   // check if array is sorted in increasing order
   function checkIncreasing() {
     let i = 0,
-      j = 1
+      j = 1;
 
     while (arr[i] <= arr[j]) {
-      ++i
-      if (++j > arr.length - 1) return true
+      ++i;
+      if (++j > arr.length - 1) return true;
     }
 
-    return false
+    return false;
   }
 
   function checkDecreasing() {
     let i = arr.length - 1,
-      j = arr.length - 2
+      j = arr.length - 2;
 
     while (arr[i] <= arr[j]) {
-      --i
-      if (--j < 0) return true
+      --i;
+      if (--j < 0) return true;
     }
 
-    return false
+    return false;
   }
 
-  return checkIncreasing() || checkDecreasing()
+  return checkIncreasing() || checkDecreasing();
 }
 
 // Time Complexity: O(n) (Worst-case analysis)

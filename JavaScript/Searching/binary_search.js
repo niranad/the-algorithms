@@ -6,25 +6,24 @@
  * @returns index of the search key if found, otherwise a negative value.
  */
 
-
 // Correct inputs are assumed; you might need to test if inputs are valid in your use case.
 export default function binarySearch(arr, key) {
-  let startIndex = 0
-  let endIndex = arr.length - 1
-  let midIndex
+  let startIndex = 0;
+  let endIndex = arr.length - 1;
+  let midIndex;
 
   while (startIndex <= endIndex) {
-    midIndex = Math.floor((startIndex + endIndex) / 2)
+    midIndex = Math.floor((startIndex + endIndex) / 2);
     if (arr[midIndex] === key) {
-      return midIndex
+      return midIndex;
     } else if (arr[midIndex] < key) {
-      startIndex = midIndex + 1
+      startIndex = midIndex + 1;
     } else if (arr[midIndex] > key) {
-      endIndex = midIndex - 1
+      endIndex = midIndex - 1;
     }
   }
 
-  return -1 - midIndex
+  return -1 - midIndex;
 }
 
 // Time Complexity: O(logn) (Worst-case analysis)
