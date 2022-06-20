@@ -7,39 +7,55 @@ export default class DLL {
     this.tail = null;
   }
 
-  insertAtFront = (data) => {
-    if (!data) {
+  /**
+   * Inserts a node with the given value as the first node of the list.
+   * @param {*} value value of node to be inserted
+   * @returns inserted value
+   */
+  insertFirst = (value) => {
+    if (!value) {
       return null;
     }
 
     if (this.head === null) {
-      this.head = this.tail = new DLLNode(data);
+      this.head = this.tail = new DLLNode(value);
     } else {
-      this.head = this.head.prev = new DLLNode(data, null, this.head);
+      this.head = this.head.prev = new DLLNode(value, null, this.head);
     }
 
-    return data;
+    return value;
   };
 
-  insertAtBack = (data) => {
-    if (!data) {
+  /**
+   * Inserts a node with the given value to the back of the list.
+   * @param {*} value value of node to be added
+   * @returns inserted value
+   */
+  insertLast = (value) => {
+    if (!value) {
       return null;
     }
 
     if (this.head === null) {
-      this.head = this.tail = new DLLNode(data);
+      this.head = this.tail = new DLLNode(value);
     } else {
-      this.tail = this.tail.next = new DLLNode(data, this.tail);
+      this.tail = this.tail.next = new DLLNode(value, this.tail);
     }
 
-    return data;
+    return value;
   };
 
-  insert = (index, data) => {
+  /**
+   * Adds a node with the given value at the specified index position.
+   * @param {*} index position at which the new node will be inserted
+   * @param {*} value value of node to be inserted
+   * @returns inserted value
+   */
+  insert = (index, value) => {
     if (
       this.head === null ||
-      data === null ||
-      data === undefined ||
+      value === null ||
+      value === undefined ||
       index >= this.size() ||
       index < 0
     ) {
@@ -55,18 +71,23 @@ export default class DLL {
     }
 
     if (index === 0) {
-      this.head = new DLLNode(data, null, this.head);
+      this.head = new DLLNode(value, null, this.head);
       this.head.next.prev = this.head;
     } else {
       let nodeBefore = currNode.prev;
-      let newNode = new DLLNode(data, nodeBefore, currNode);
+      let newNode = new DLLNode(value, nodeBefore, currNode);
       currNode.prev = newNode;
       nodeBefore.next = newNode;
     }
 
-    return data;
+    return value;
   };
 
+  /**
+   * Retrieves the list element at a given position.
+   * @param {*} index position of the node to get
+   * @returns reference to the node
+   */
   get = (index) => {
     if (this.isEmpty() || index < 0 || index >= this.size()) {
       return null;
@@ -80,9 +101,12 @@ export default class DLL {
       ++i;
     }
 
-    return currNode.data;
+    return currNode;
   };
 
+  /**
+   * Reverses the order of the list, making the head element the tail and vice-versa.
+   */
   reverse = () => {
     let currNode = this.head;
 
@@ -100,34 +124,42 @@ export default class DLL {
     this.tail = last;
   };
 
-  removeFromFront = () => {
+  /**
+   * Removes the first list node.
+   * @returns the removed node's value
+   */
+  removeFirst = () => {
     if (this.isEmpty()) {
       return null;
     }
 
-    let removedData = null;
+    let removedValue = null;
 
     if (this.head === this.tail) {
-      removedData = this.head.data;
+      removedValue = this.head.value;
       this.head = this.tail = null;
     } else {
-      removedData = this.head.data;
+      removedValue = this.head.value;
       this.head = this.head.next;
       this.head.prev = null;
     }
 
-    return removedData;
+    return removedValue;
   };
 
-  removeFromBack = () => {
+  /**
+   * Removes the last list node.
+   * @returns the removed node's value
+   */
+  removeLast = () => {
     if (this.isEmpty()) {
       return null;
     }
 
-    let removedData = null;
+    let removedValue = null;
 
     if (this.head === this.tail) {
-      removedData = tail.data;
+      removedValue = tail.value;
       this.head = this.tail = null;
     } else {
       let currNode = this.head;
@@ -136,14 +168,19 @@ export default class DLL {
         currNode = currNode.next;
       }
 
-      removedData = currNode.next.data;
+      removedValue = currNode.next.value;
       currNode.next = null;
       this.tail = currNode;
     }
 
-    return removedData;
+    return removedValue;
   };
 
+  /**
+   * Removes the list node at a given position.
+   * @param {*} index position of the node to be removed
+   * @returns the removed node's value
+   */
   remove = (index) => {
     if (this.isEmpty() || index < 0 || index >= this.size()) {
       return null;
@@ -157,7 +194,7 @@ export default class DLL {
       i++;
     }
 
-    let removedData = currNode.data;
+    let removedValue = currNode.value;
 
     if (index === 0) {
       if (this.size() == 1) {
@@ -175,9 +212,13 @@ export default class DLL {
       currNode = null;
     }
 
-    return removedData;
+    return removedValue;
   };
 
+  /**
+   * Removes nodes with duplicate values, leaving one of such nodes.
+   * @returns the new size of the list
+   */
   removeDuplicates = () => {
     let len = this.size();
     let pointer1 = this.head;
@@ -186,10 +227,10 @@ export default class DLL {
     let j = i + 1;
 
     while (i < len) {
-      let data1 = pointer1.data;
+      let value1 = pointer1.value;
       while (j < len) {
-        let data2 = pointer2.data;
-        if (data1 === data2) {
+        let value2 = pointer2.value;
+        if (value1 === value2) {
           if (j === len - 1) {
             this.tail = this.tail.prev;
             this.tail.next = null;
@@ -215,8 +256,16 @@ export default class DLL {
     return len;
   };
 
+  /**
+   * Checks if the list is empty
+   * @returns boolean
+   */
   isEmpty = () => this.head === null;
 
+  /**
+   * Determines the length of the list.
+   * @returns the length of the list
+   */
   size = () => {
     if (this.isEmpty()) {
       return 0;
@@ -238,9 +287,9 @@ export default class DLL {
  * Doubly Linked List Node
  */
 class DLLNode {
-  constructor(data, prev = null, next = null) {
-    this.prev = prev;
-    this.data = data;
-    this.next = next;
+  constructor(value, prev = null, next = null) {
+    this.value = value;
+    this.prev = prev instanceof this ? prev : null;
+    this.next = next instanceof this ? next : null;
   }
 }

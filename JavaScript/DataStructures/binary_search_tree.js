@@ -13,18 +13,18 @@ export class BST {
    */
   insert = (value) => {
     if (this.root === null) {
-      this.root = new TreeNode(value);
+      this.root = new BSTNode(value);
     }
 
     let current = this.root;
 
     while (current) {
       if (value < current.value && !current.left) {
-        current.left = new TreeNode(value);
+        current.left = new BSTNode(value);
       } else if (value < current.value && current.left) {
         current = current.left;
       } else if (value > current.value && !current.right) {
-        current.right = new TreeNode(value);
+        current.right = new BSTNode(value);
       } else if (value > current.value && current.right) {
         current = current.right;
       } else {
@@ -400,6 +400,11 @@ export class BST {
     return deleteNode(value);
   };
 
+  /**
+   * Inverts the binary search tree by swapping the left child with the right child and
+   * vice-versa. After inversion, the tree is no longer a binary search tree.
+   * A binary search tree inverted an even number of times is still a binary search tree.
+   */
   invert = () => {
     const invertTree = (node) => {
       if (node != null) {
@@ -430,7 +435,10 @@ export class BST {
   };
 }
 
-class TreeNode {
+/**
+ * Binary Search Tree Node
+ */
+class BSTNode {
   constructor(value) {
     this.value = value;
     this.left = null;

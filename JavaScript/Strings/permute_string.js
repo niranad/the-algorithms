@@ -1,10 +1,11 @@
 /**
  * Finds all permutations of a string. Each character is treated as unique
- * whether or not the input string contains duplicate characters.
+ * whether or not the input string contains duplicate characters. This permutation
+ * is without repetition.
  * @param {*} s input string
  * @returns an array of all permutations of the string
  */
-function permuteString(s) {
+export default function permuteString(s) {
   // array of string characters
   let charArr = s.split('');
   // array of all permutations

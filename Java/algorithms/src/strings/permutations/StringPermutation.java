@@ -1,8 +1,13 @@
-package recursion;
+package strings.permutations;
 
 import java.util.ArrayList;
 
-public class StringPermutations {
+/**
+ * <p>Problem statement:</p>
+ *	Find all the permutations of a given string. 
+ */
+
+public class StringPermutation {
 
 	public static void main(String[] args) {
 		System.out.println(permuteString("ABCDEF"));
