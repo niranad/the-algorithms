@@ -8,54 +8,54 @@ export default class DLL {
   }
 
   /**
-   * Inserts a node with the given value as the first node of the list.
-   * @param {*} value value of node to be inserted
-   * @returns inserted value
+   * Inserts a node with the given data as the first node of the list.
+   * @param {*} data data of node to be inserted
+   * @returns inserted data
    */
-  insertFirst = (value) => {
-    if (!value) {
+  insertFirst = (data) => {
+    if (!data) {
       return null;
     }
 
     if (this.head === null) {
-      this.head = this.tail = new DLLNode(value);
+      this.head = this.tail = new DLLNode(data);
     } else {
-      this.head = this.head.prev = new DLLNode(value, null, this.head);
+      this.head = this.head.prev = new DLLNode(data, null, this.head);
     }
 
-    return value;
+    return data;
   };
 
   /**
-   * Inserts a node with the given value to the back of the list.
-   * @param {*} value value of node to be added
-   * @returns inserted value
+   * Inserts a node with the given data to the back of the list.
+   * @param {*} data data of node to be added
+   * @returns inserted data
    */
-  insertLast = (value) => {
-    if (!value) {
+  insertLast = (data) => {
+    if (!data) {
       return null;
     }
 
     if (this.head === null) {
-      this.head = this.tail = new DLLNode(value);
+      this.head = this.tail = new DLLNode(data);
     } else {
-      this.tail = this.tail.next = new DLLNode(value, this.tail);
+      this.tail = this.tail.next = new DLLNode(data, this.tail);
     }
 
-    return value;
+    return data;
   };
 
   /**
-   * Adds a node with the given value at the specified index position.
+   * Adds a node with the given data at the specified index position.
    * @param {*} index position at which the new node will be inserted
-   * @param {*} value value of node to be inserted
-   * @returns inserted value
+   * @param {*} data data of node to be inserted
+   * @returns inserted data
    */
-  insert = (index, value) => {
+  insert = (index, data) => {
     if (
       this.head === null ||
-      value === null ||
-      value === undefined ||
+      data === null ||
+      data === undefined ||
       index >= this.size() ||
       index < 0
     ) {
@@ -71,16 +71,16 @@ export default class DLL {
     }
 
     if (index === 0) {
-      this.head = new DLLNode(value, null, this.head);
+      this.head = new DLLNode(data, null, this.head);
       this.head.next.prev = this.head;
     } else {
       let nodeBefore = currNode.prev;
-      let newNode = new DLLNode(value, nodeBefore, currNode);
+      let newNode = new DLLNode(data, nodeBefore, currNode);
       currNode.prev = newNode;
       nodeBefore.next = newNode;
     }
 
-    return value;
+    return data;
   };
 
   /**
@@ -126,40 +126,40 @@ export default class DLL {
 
   /**
    * Removes the first list node.
-   * @returns the removed node's value
+   * @returns the removed node's data
    */
   removeFirst = () => {
     if (this.isEmpty()) {
       return null;
     }
 
-    let removedValue = null;
+    let removedData = null;
 
     if (this.head === this.tail) {
-      removedValue = this.head.value;
+      removedData = this.head.data;
       this.head = this.tail = null;
     } else {
-      removedValue = this.head.value;
+      removedData = this.head.data;
       this.head = this.head.next;
       this.head.prev = null;
     }
 
-    return removedValue;
+    return removedData;
   };
 
   /**
    * Removes the last list node.
-   * @returns the removed node's value
+   * @returns the removed node's data
    */
   removeLast = () => {
     if (this.isEmpty()) {
       return null;
     }
 
-    let removedValue = null;
+    let removedData = null;
 
     if (this.head === this.tail) {
-      removedValue = tail.value;
+      removedData = tail.data;
       this.head = this.tail = null;
     } else {
       let currNode = this.head;
@@ -168,18 +168,18 @@ export default class DLL {
         currNode = currNode.next;
       }
 
-      removedValue = currNode.next.value;
+      removedData = currNode.next.data;
       currNode.next = null;
       this.tail = currNode;
     }
 
-    return removedValue;
+    return removedData;
   };
 
   /**
    * Removes the list node at a given position.
    * @param {*} index position of the node to be removed
-   * @returns the removed node's value
+   * @returns the removed node's data
    */
   remove = (index) => {
     if (this.isEmpty() || index < 0 || index >= this.size()) {
@@ -194,7 +194,7 @@ export default class DLL {
       i++;
     }
 
-    let removedValue = currNode.value;
+    let removedData = currNode.data;
 
     if (index === 0) {
       if (this.size() == 1) {
@@ -212,11 +212,11 @@ export default class DLL {
       currNode = null;
     }
 
-    return removedValue;
+    return removedData;
   };
 
   /**
-   * Removes nodes with duplicate values, leaving one of such nodes.
+   * Removes nodes with duplicate datas, leaving one of such nodes.
    * @returns the new size of the list
    */
   removeDuplicates = () => {
@@ -227,10 +227,10 @@ export default class DLL {
     let j = i + 1;
 
     while (i < len) {
-      let value1 = pointer1.value;
+      let data1 = pointer1.data;
       while (j < len) {
-        let value2 = pointer2.value;
-        if (value1 === value2) {
+        let data2 = pointer2.data;
+        if (data1 === data2) {
           if (j === len - 1) {
             this.tail = this.tail.prev;
             this.tail.next = null;
@@ -287,9 +287,16 @@ export default class DLL {
  * Doubly Linked List Node
  */
 class DLLNode {
-  constructor(value, prev = null, next = null) {
-    this.value = value;
-    this.prev = prev instanceof this ? prev : null;
-    this.next = next instanceof this ? next : null;
+  constructor(data, prev = null, next = null) {
+    this.data = data;
+    if (
+      (prev === null || prev instanceof DLLNode) &&
+      (next === null || prev instanceof DLLNode)
+    ) {
+      this.prev = prev;
+      this.next = next;
+    }
+
+    throw Error('Node object is incompatible with DLLNode');
   }
 }

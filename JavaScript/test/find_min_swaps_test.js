@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import findMinSwaps from '../Sorting/find_min_swaps.js';
+import findMinSwaps from '../Arrays/Sorting/find_min_swaps.js';
 
 let arr;
 

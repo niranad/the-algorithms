@@ -362,6 +362,7 @@ export class BST {
         }
       }
     };
+    
     processMidOfPartitions();
     this.root = null;
     midValues.forEach((d) => this.insert(d));

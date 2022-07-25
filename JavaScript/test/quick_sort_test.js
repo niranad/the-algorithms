@@ -1,6 +1,6 @@
 import { assert } from 'chai';
-import quickSort from '../Sorting/quick_sort.js';
-import isArraySorted from '../Sorting/is_array_sorted.js';
+import quickSort from '../Arrays/Sorting/quick_sort.js';
+import isArraySorted from '../Arrays/Sorting/is_array_sorted.js';
 
 let arr = [];
 

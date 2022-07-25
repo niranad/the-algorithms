@@ -9,7 +9,7 @@ public class LinkedList<T> {
 	}
 
 	/**
-	 * Inserts a node with the given value at the beginning of the list.
+	 * Inserts a node of the given value at the beginning of the list.
 	 * 
 	 * @param value value of node to be inserted
 	 */
@@ -27,7 +27,7 @@ public class LinkedList<T> {
 	}
 
 	/**
-	 * Inserts a node with the given value at the end of the list.
+	 * Inserts a node of the given value at the end of the list.
 	 * 
 	 * @param value of node to be inserted
 	 */
@@ -52,7 +52,7 @@ public class LinkedList<T> {
 	}
 
 	/**
-	 * Inserts a node with the given value at the specified index. Returns true if
+	 * Inserts a node of the given value at the specified index. Returns true if
 	 * the operation was successful, otherwise false.
 	 * 
 	 * @param value of node to be inserted.
@@ -96,7 +96,7 @@ public class LinkedList<T> {
 	/**
 	 * Removes the first node from the list.
 	 * 
-	 * @return value at the node removed, {@code null} if list is empty.
+	 * @return value at the node removed or {@code null} if list is empty.
 	 *
 	 */
 	public T removeFirst() {

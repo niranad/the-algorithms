@@ -6,21 +6,21 @@ class LinkedListTest(unittest.TestCase):
     def test_insert_first(self):
         ll = LinkedList()
         ll.insert_first(7)
-        self.assertEqual(ll.head.value, 7, 'insert_first should insert value 7 as the first value')
+        self.assertEqual(ll.head.data, 7, 'insert_first should insert value 7 as the first value')
 
         ll.insert_first(5)
-        self.assertEqual(ll.head.value, 5, 'insert_first should insert value 5 as the first value')
+        self.assertEqual(ll.head.data, 5, 'insert_first should insert value 5 as the first value')
 
     def test_insert_last(self):
         ll = LinkedList()
         ll.insert_last(3)
-        self.assertEqual(ll.head.value, 3, 'insert_last should insert value 3 as the last value')
+        self.assertEqual(ll.head.data, 3, 'insert_last should insert value 3 as the last value')
 
         ll.insert_last(5)
-        self.assertEqual(ll.head.next.value, 5, 'insert_last should insert value 5 as the last value')
+        self.assertEqual(ll.head.next.data, 5, 'insert_last should insert value 5 as the last value')
 
         ll.insert_last(7)
-        self.assertEqual(ll.head.next.next.value, 7, 'insert_last should insert value 7 as the last value')
+        self.assertEqual(ll.head.next.next.data, 7, 'insert_last should insert value 7 as the last value')
 
     def test_insert(self):
         ll = LinkedList()
@@ -31,13 +31,13 @@ class LinkedListTest(unittest.TestCase):
 
         # if index is within range
         ll.insert(3, 0)
-        self.assertEqual(ll.head.value, 3, 'insert should successfully insert at index 0')
+        self.assertEqual(ll.head.data, 3, 'insert should successfully insert at index 0')
         ll.insert(5, 1)
-        self.assertEqual(ll.head.next.value, 5, 'insert should successfully insert at index 1')
+        self.assertEqual(ll.head.next.data, 5, 'insert should successfully insert at index 1')
         ll.insert(7, 2)
-        self.assertEqual(ll.head.next.next.value, 7, 'insert should successfully insert at index 2')
+        self.assertEqual(ll.head.next.next.data, 7, 'insert should successfully insert at index 2')
 
-        self.assertEqual(ll.head.next.next.next.value, 2, 'insert should preserve existing values')
+        self.assertEqual(ll.head.next.next.next.data, 2, 'insert should preserve existing values')
 
     def test_remove_first(self):
         ll = LinkedList()
@@ -75,17 +75,17 @@ class LinkedListTest(unittest.TestCase):
         self.assertEqual(ll.remove(0), 3, 'should remove the value 3 at index 0')
         self.assertIsNone(ll.remove(0), 'remove should return None for an empty list')
 
-    def test_remove_by_value(self):
+    def test_remove_by_data(self):
         ll = LinkedList()
         ll.insert_last(3)
         ll.insert_last(5)
         ll.insert_last(7)
         # 3 -> 5 -> 7
 
-        self.assertEqual(ll.remove_by_value(5), 5, 'remove_by_value should remove the value 5')
-        self.assertEqual(ll.remove_by_value(7), 7, 'remove_by_value should remove the value 7')
-        self.assertEqual(ll.remove_by_value(3), 3, 'remove_by_value should remove the value 3')
-        self.assertIsNone(ll.remove_by_value(3), 'remove_by_value should return None for an empty list')
+        self.assertEqual(ll.remove_by_data(5), 5, 'remove_by_data should remove the value 5')
+        self.assertEqual(ll.remove_by_data(7), 7, 'remove_by_data should remove the value 7')
+        self.assertEqual(ll.remove_by_data(3), 3, 'remove_by_data should remove the value 3')
+        self.assertIsNone(ll.remove_by_data(3), 'remove_by_data should return None for an empty list')
 
     def test_get(self):
         ll = LinkedList()

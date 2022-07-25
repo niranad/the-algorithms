@@ -6,9 +6,9 @@ class LinkedList:
         self.head = None
         self.length = 0
 
-    def insert_first(self, value):
-        """Inserts a node with the given value at the beginning of the list."""
-        new_node = LLNode(value)
+    def insert_first(self, data):
+        """Inserts a node with the given data at the beginning of the list."""
+        new_node = LLNode(data)
 
         if self.head is None:
             self.head = new_node
@@ -18,9 +18,9 @@ class LinkedList:
 
         self.length = self.length + 1
 
-    def insert_last(self, value):
-        """Inserts a node with the given value at the end of the list."""
-        new_node = LLNode(value)
+    def insert_last(self, data):
+        """Inserts a node with the given data at the end of the list."""
+        new_node = LLNode(data)
 
         if self.head is None:
             self.head = new_node
@@ -36,14 +36,14 @@ class LinkedList:
 
         self.length = self.length + 1
 
-    def insert(self, value, index):
-        """Inserts a node with the given value at the specified index position in the list.
+    def insert(self, data, index):
+        """Inserts a node with the given data at the specified index position in the list.
         If the given index is out of bounds, it returns false indicating the operation was
         not successful. Otherwise returns true."""
 
         # if index is within bounds (i.e., index exists)
         if 0 <= index <= self.length - 1:
-            new_node = LLNode(value)
+            new_node = LLNode(data)
 
             if index == 0:
                 new_node.next = self.head
@@ -76,11 +76,11 @@ class LinkedList:
             return None
 
         first = self.head
-        first_value = first.value
+        first_data = first.data
         self.head = first.next
         self.length = self.length - 1
 
-        return first_value
+        return first_data
 
     def remove_last(self):
         """Removes the last node from the list and returns its value. If the list is empty, returns None."""
@@ -88,9 +88,9 @@ class LinkedList:
             return None
 
         if self.head.next is None:
-            last_value = self.head.value
+            last_data = self.head.data
             self.head = self.head.next
-            return last_value
+            return last_data
 
         current = self.head
 
@@ -99,11 +99,11 @@ class LinkedList:
             current = current.next
 
         last = current.next
-        last_value = last.value
+        last_data = last.data
         current.next = None
         self.length = self.length - 1
 
-        return last_value
+        return last_data
 
     def remove(self, index):
         """Removes a node at the specified index. Returns None if the index is out of bounds,
@@ -116,45 +116,42 @@ class LinkedList:
                 self.head = the_node.next
                 the_node.next = None  # detach the node from the rest of the list
                 self.length = self.length - 1
-                return the_node.value
+                return the_node.data
 
             current = self.head
             curr_idx = 0  # index of the current node
 
-            while current.next is not None:
-                # if current node is the node before the node to be removed
-                if curr_idx == index - 1:
-                    break
-                else:
-                    current = current.next
-                    curr_idx = curr_idx + 1
+            # scan the list to the node before the node to be removed
+            while curr_idx < index - 1:
+                current = current.next
+                curr_idx = curr_idx + 1
 
             the_node = current.next  # node to be removed
             node_after = the_node.next  # node after the node to be removed
             current.next = node_after
             the_node.next = None
             self.length = self.length - 1
-            return the_node.value
+            return the_node.data
 
         return None
 
-    def remove_by_value(self, value):
+    def remove_by_data(self, data):
         """Removes the first node with the given value. Returns the value
         if found, none otherwise."""
 
         if self.head is None:
             return None
 
-        if self.head.value == value:
+        if self.head.data == data:
             the_node = self.head  # the node to be removed
             self.head = the_node.next
             the_node.next = None  # detach the node from the rest of the list
             self.length = self.length - 1
-            return value
+            return data
 
         current = self.head
 
-        while current.next is not None and current.next.value != value:
+        while current.next is not None and current.next.data != data:
             current = current.next
 
         # if the node is found
@@ -164,7 +161,7 @@ class LinkedList:
             current.next = node_after
             the_node.next = None
             self.length = self.length - 1
-            return value
+            return data
 
         return None
 
@@ -178,7 +175,7 @@ class LinkedList:
 
             while current is not None:
                 if curr_idx == index:
-                    return current.value
+                    return current.data
                 current = current.next
                 curr_idx = curr_idx + 1
 
@@ -191,13 +188,13 @@ class LinkedList:
     def is_empty(self):
         return self.length == 0
 
-    def get_position(self, value):
+    def get_position(self, data):
         """Returns the position of the first node with the given value, -1 if not found."""
         current = self.head
         curr_idx = 0
 
         while current is not None:
-            if current.value == value:
+            if current.data == data:
                 return curr_idx
             current = current.next
             curr_idx = curr_idx + 1
@@ -211,6 +208,6 @@ class LinkedList:
 
 
 class LLNode:
-    def __init__(self, value):
-        self.value = value
+    def __init__(self, data):
+        self.data = data
         self.next = None
