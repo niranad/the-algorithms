@@ -1,0 +1,2 @@
+## Minimal Tests For Abstract Data Structures in Java
+This package contains a growing list of [JUnit](https://junit.org) test cases for the Abstract Data Structures implemented in the [datastructures](../) package.

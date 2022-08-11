@@ -9,7 +9,7 @@ class CLLNode {
 }
 
 /**
- * Circular Linked List
+ * Circular Linked List implementation. The limitation of this implemenation
  */
 class CLL {
   constructor() {
@@ -18,7 +18,7 @@ class CLL {
   }
 
   /**
-   * Inserts a node with the given data as the first node.
+   * Inserts a node into the circular linked list with the given data as the first node.
    * @param {*} data data to be inserted
    */
   insertFirst = (data) => {
@@ -40,7 +40,7 @@ class CLL {
   };
 
   /**
-   * Inserts a node with the given data as the last node.
+   * Inserts a node into the circular linked list with the given data as the last node.
    * @param {*} data data to be inserted
    */
   insertLast = (data) => {
@@ -61,7 +61,7 @@ class CLL {
   };
 
   /**
-   * Deletes the first node and returns its data.
+   * Deletes the first node of the circular linked list and returns its data.
    * @returns data at the deleted node
    */
   removeFirst = () => {
@@ -91,7 +91,7 @@ class CLL {
   };
 
   /**
-   * Deletes the last node and returns its data.
+   * Deletes the last node of the circular linked list and returns its data.
    * @returns data at the deleted node
    */
   removeLast = () => {
@@ -128,34 +128,65 @@ class CLL {
    * @returns true if the data is found and removed, false otherwise
    */
   remove = (data) => {
-    // If list is empty
-    if (this.head === null) {
-      return false;
-    }
-
-    // If data equals data at the head
-    if (data === this.head.data) {
-      this.removeFirst();
-      return true;
-    }
-
-    // If list has one element (then data is not found)
-    if (this.head === this.head.next) {
-      return false;
-    }
-
-    // Traverse the list to find data
-    let current = this.head;
-    while (current.next !== this.head) {
-      if (current.next.data === data) {
-        current.next = current.next.next;
-        this.length--;
+    // If list is not empty
+    if (this.head !== null) {
+      // If data equals data at the head
+      if (data === this.head.data) {
+        this.removeFirst();
         return true;
       }
-      current = current.next;
+
+      // If list has one element, then data is not found
+      if (this.head === this.head.next) {
+        return false;
+      }
+
+      // Traverse the list to find data
+      let current = this.head;
+      while (current.next !== this.head) {
+        if (current.next.data === data) {
+          current.next = current.next.next;
+          this.length--;
+          return true;
+        }
+        current = current.next;
+      }
     }
 
     return false;
+  };
+
+  /**
+   * Checks if the circular linked list has a node with the specified data.
+   * @param {*} data search data
+   */
+  has = (data) => {
+    // If list is not empty
+    if (this.head !== null) {
+      // Traverse list to find data
+      let current = this.head;
+      do {
+        if (current.data === data) {
+          return true;
+        }
+        // Advance current node iterator
+        current = current.next;
+      } while (current !== this.head);
+    }
+
+    return false;
+  };
+
+  /**
+   * Returns true if list is empty
+   */
+  isEmpty = () => this.head === null;
+
+  /**
+   * Clears the circular linked list.
+   */
+  clear = () => {
+    this.head = null;
   };
 
   /**
@@ -178,14 +209,24 @@ class CLL {
     return current;
   };
 
-  printList = () => {
-    let current = this.head;
-    let currIdx = 0;
+  /**
+   * Returns an array of the circular linked list.
+   * @returns array
+   */
+  toArray = () => {
+    // If list is not empty
+    if (this.head !== null) {
+      let current = this.head;
+      let arr = [];
 
-    while (currIdx === 0 || current !== this.head) {
-      console.log(current.data);
-      current = current.next;
-      currIdx++;
+      do {
+        arr.push(current.data);
+        current = current.next;
+      } while (current !== this.head);
+
+      return arr;
     }
+
+    return null;
   };
 }
