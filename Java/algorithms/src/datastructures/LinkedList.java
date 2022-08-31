@@ -1,11 +1,24 @@
 package datastructures;
 
+import java.util.Collection;
+
 public class LinkedList<T> {
 	private LLNode<T> head;
 	private int length;
 
 	public LinkedList() {
 		head = null;
+	}
+	
+	public LinkedList(Collection<T> list) {
+		for (T el : list) {
+			insertLast(el);
+			length++;
+		}
+	}
+	
+	public LLNode<T> getHead() {
+		return head;
 	}
 
 	/**
@@ -283,15 +296,5 @@ public class LinkedList<T> {
 	public void clear() {
 		head = null;
 		length = 0;
-	}
-}
-
-class LLNode<T> {
-	T value;
-	LLNode<T> next;
-
-	LLNode(T value) {
-		this.value = value;
-		this.next = null;
 	}
 }

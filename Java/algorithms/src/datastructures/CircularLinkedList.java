@@ -2,6 +2,7 @@ package datastructures;
 
 import java.io.Serializable;
 import java.util.AbstractSequentialList;
+import java.util.Collection;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.ListIterator;
@@ -9,8 +10,10 @@ import java.util.NoSuchElementException;
 
 /**
  * This class implements a {@code CircularLinkedList} backed by "sequential
- * access" data store with unidirectional element nodes. The implementation is
- * similar to that of singly-linked list except that the end of the list is not
+ * access" data store with unidirectional element nodes. {@code Null} elements
+ * are not allowed in this list. Each instance of this list can only contain a
+ * maximum of {@code Integer.MAX_VALUE} elements. The implementation is similar
+ * to that of doubly-linked list except that the end of the list is not
  * indicated with a {@code null} reference but the element with a reference to
  * the head. This variation of {@code LinkedList} is useful for managing system
  * resources and can be used to implement stacks and queues.
@@ -24,8 +27,20 @@ public class CircularLinkedList<T> extends AbstractSequentialList<T>
 	private CLLNode<T> tail;
 	private int size;
 
+	public CircularLinkedList() {
+	}
+
+	public CircularLinkedList(Collection<T> collection) {
+		for (T elem : collection) {
+			addLast(elem);
+			size++;
+		}
+	}
+
 	/**
-	 * Inserts the given element to the beginning of the circular linked list.
+	 * Adds an element to the beginning of this list only if there are less elements
+	 * than the maximum number of elements (i.e., {@code Integer.MAX_VALUE}) for
+	 * this instance of the list.
 	 * 
 	 * @param data
 	 * @throws NullPointerException     if element is {@code null}
@@ -39,6 +54,10 @@ public class CircularLinkedList<T> extends AbstractSequentialList<T>
 
 		if (!(data instanceof Serializable)) {
 			throw new IllegalArgumentException();
+		}
+
+		if (size() == Integer.MAX_VALUE) {
+			return;
 		}
 
 		CLLNode<T> newNode = createNode(data);
@@ -64,7 +83,9 @@ public class CircularLinkedList<T> extends AbstractSequentialList<T>
 	}
 
 	/**
-	 * Inserts the given element to the end of this list.
+	 * Adds an element to the end of this list only if there are less elements than
+	 * the maximum number of elements (i.e., {@code Integer.MAX_VALUE}) for this
+	 * instance of the list.
 	 * 
 	 * @param data element to be inserted
 	 * @throws NullPointerException     if element is {@code null}
@@ -78,6 +99,10 @@ public class CircularLinkedList<T> extends AbstractSequentialList<T>
 
 		if (!(data instanceof Serializable)) {
 			throw new IllegalArgumentException();
+		}
+
+		if (size() == Integer.MAX_VALUE) {
+			return;
 		}
 
 		CLLNode<T> newNode = createNode(data);
@@ -101,10 +126,20 @@ public class CircularLinkedList<T> extends AbstractSequentialList<T>
 		size++;
 	}
 
+	/**
+	 * Adds an element to the end of this list. This operation fails if the size of
+	 * the list equals {@code Integer.MAX_VALUE}.
+	 * 
+	 * @return {@code true} if the operation succeeded, {@code false} otherwise.
+	 */
 	@Override
 	public boolean add(T data) throws NullPointerException {
 		if (data == null) {
 			throw new NullPointerException();
+		}
+
+		if (size() == Integer.MAX_VALUE) {
+			return false;
 		}
 
 		addLast(data);
@@ -112,7 +147,8 @@ public class CircularLinkedList<T> extends AbstractSequentialList<T>
 	}
 
 	/**
-	 * Inserts the given element at the specified index, if it exists.
+	 * Adds an element at the specified index, if
+	 * {@code index >= 0 && index <= size}.
 	 * 
 	 * @param data  element to be inserted
 	 * @param index position where the new element is inserted
@@ -121,8 +157,8 @@ public class CircularLinkedList<T> extends AbstractSequentialList<T>
 	@Override
 	public void add(int index, T data)
 		throws IndexOutOfBoundsException, NullPointerException, IllegalArgumentException {
-		if (index < 0 || index > size) {
-			throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+		if (index < 0 || index > size()) {
+			throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size());
 		}
 
 		if (data == null) {
@@ -135,14 +171,14 @@ public class CircularLinkedList<T> extends AbstractSequentialList<T>
 
 		if (index == 0) {
 			addFirst(data);
-		} else if (index == size) {
+		} else if (index == size()) {
 			addLast(data);
 		} else {
 			CLLNode<T> newNode = createNode(data);
 			CLLNode<T> current;
 			int currIdx;
 
-			if (size - index > index) { // If index is closer to the head
+			if (size() - index > index) { // If index is closer to the head
 				current = head;
 				currIdx = 0;
 				while (index > currIdx) {
@@ -151,7 +187,7 @@ public class CircularLinkedList<T> extends AbstractSequentialList<T>
 				}
 			} else {
 				current = tail;
-				currIdx = size - 1;
+				currIdx = size() - 1;
 				while (currIdx > index) {
 					current = current.previous;
 					currIdx--;
@@ -221,11 +257,11 @@ public class CircularLinkedList<T> extends AbstractSequentialList<T>
 
 	@Override
 	public T remove(int index) throws IndexOutOfBoundsException {
-		if (index < 0 || index >= size) {
-			throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+		if (index < 0 || index >= size()) {
+			throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size());
 		}
 
-		if (index == size - 1) {
+		if (index == size() - 1) {
 			return removeLast();
 		}
 
@@ -236,7 +272,7 @@ public class CircularLinkedList<T> extends AbstractSequentialList<T>
 		CLLNode<T> current;
 		int currIdx;
 
-		if (size - index > index) {
+		if (size() - index > index) {
 			current = head;
 			currIdx = 0;
 
@@ -246,7 +282,7 @@ public class CircularLinkedList<T> extends AbstractSequentialList<T>
 			}
 		} else {
 			current = tail;
-			currIdx = size - 1;
+			currIdx = size() - 1;
 
 			while (currIdx > index) {
 				current = current.previous;
@@ -342,14 +378,14 @@ public class CircularLinkedList<T> extends AbstractSequentialList<T>
 
 	@Override
 	public T get(int index) throws IndexOutOfBoundsException {
-		if (index < 0 || index >= size) {
-			throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+		if (index < 0 || index >= size()) {
+			throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size());
 		}
 
 		CLLNode<T> current;
 		int currIdx;
 
-		if (size - index > index) { // If element to get is closer to the head
+		if (size() - index > index) { // If element to get is closer to the head
 			current = head;
 			currIdx = 0;
 
@@ -396,7 +432,7 @@ public class CircularLinkedList<T> extends AbstractSequentialList<T>
 	@Override
 	public Object[] toArray() {
 		if (head != null) {
-			Object[] arr = new Object[size];
+			Object[] arr = new Object[size()];
 			CLLNode<T> node = head;
 			int i = 0;
 
@@ -488,14 +524,14 @@ public class CircularLinkedList<T> extends AbstractSequentialList<T>
 
 	@Override
 	public ListIterator<T> listIterator(int index) throws IndexOutOfBoundsException {
-		if (index < 0 || index > size) {
-			throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+		if (index < 0 || index > size()) {
+			throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size());
 		}
 
 		CLLNode<T> current;
 		int currIdx;
 
-		if (size - index > index) {
+		if (size() - index > index) {
 			current = head;
 			currIdx = 0;
 			while (index > currIdx) {
@@ -504,7 +540,7 @@ public class CircularLinkedList<T> extends AbstractSequentialList<T>
 			}
 		} else {
 			current = tail;
-			currIdx = size - 1;
+			currIdx = size() - 1;
 			while (currIdx > index) {
 				current = current.previous;
 				currIdx--;
@@ -512,14 +548,12 @@ public class CircularLinkedList<T> extends AbstractSequentialList<T>
 		}
 
 		final CLLNode<T> start = current;
-		final int startIdx = index;
-		final int initialSize = size;
 
 		return new ListIterator<T>() {
 			private CLLNode<T> cursor = start;
 			private CLLNode<T> lastReturnedElem;
-			private int index = startIdx - 1;
-			private int listSize = initialSize;
+			private int currentIndex = index - 1;
+			private int listSize = size();
 			private boolean isListEnd;
 			private boolean canRemoveFromList;
 
@@ -543,7 +577,7 @@ public class CircularLinkedList<T> extends AbstractSequentialList<T>
 					}
 				}
 
-				index++;
+				currentIndex++;
 				listSize++;
 			}
 
@@ -581,14 +615,14 @@ public class CircularLinkedList<T> extends AbstractSequentialList<T>
 					cursor = null;
 				}
 
-				index--;
+				currentIndex--;
 				size--;
 				listSize--;
 				canRemoveFromList = false;
 			}
 
 			private void checkConcurrentMod() {
-				if (size != listSize) {
+				if (size() != listSize) {
 					throw new ConcurrentModificationException();
 				}
 			}
@@ -611,20 +645,19 @@ public class CircularLinkedList<T> extends AbstractSequentialList<T>
 				// If iterator has one or more elements to process
 				if (cursor != null && !isListEnd) {
 					CLLNode<T> current = cursor;
-					int size = size();
 
 					if (current.next == head) { // If the cursor is at the end of list
 						isListEnd = !isListEnd;
 					}
 
-					if (index < size - 1) { // If the cursor position is before the last element
+					if (currentIndex < size() - 1) { // If the cursor position is before the last element
 						cursor = cursor.next;
 					}
 
 					if (!canRemoveFromList)
 						canRemoveFromList = true;
 
-					index++;
+					currentIndex++;
 					lastReturnedElem = current;
 					return current.data;
 				}
@@ -636,7 +669,7 @@ public class CircularLinkedList<T> extends AbstractSequentialList<T>
 			public T previous() throws NoSuchElementException {
 				checkConcurrentMod();
 
-				if (cursor != null && index >= 0) { // If list is not empty or there are more
+				if (cursor != null && currentIndex >= 0) { // If list is not empty or there are more
 													// elements before the cursor
 					if (isListEnd) {
 						isListEnd = !isListEnd;
@@ -644,18 +677,19 @@ public class CircularLinkedList<T> extends AbstractSequentialList<T>
 
 					CLLNode<T> current;
 					int previousIdx;
-					
-					if (listSize - index > index) {  // If element at index is closer to the start of list
+
+					if (listSize - currentIndex > currentIndex) { // If element at index is closer to the start of
+													// list
 						current = head;
 						previousIdx = 0;
-						while (index > previousIdx) {
+						while (currentIndex > previousIdx) {
 							current = current.next;
 							previousIdx++;
 						}
 					} else {
 						current = tail;
 						previousIdx = listSize - 1;
-						while (previousIdx > index) {
+						while (previousIdx > currentIndex) {
 							current = current.previous;
 							previousIdx--;
 						}
@@ -666,7 +700,7 @@ public class CircularLinkedList<T> extends AbstractSequentialList<T>
 					}
 
 					cursor = current;
-					index--;
+					currentIndex--;
 					lastReturnedElem = current;
 					return current.data;
 				}
@@ -677,13 +711,13 @@ public class CircularLinkedList<T> extends AbstractSequentialList<T>
 			@Override
 			public int nextIndex() {
 				checkConcurrentMod();
-				return (cursor == null ? 0 : index + 1);
+				return (cursor == null ? 0 : currentIndex + 1);
 			}
 
 			@Override
 			public int previousIndex() {
 				checkConcurrentMod();
-				return index;
+				return currentIndex;
 			}
 
 			@Override
@@ -695,6 +729,24 @@ public class CircularLinkedList<T> extends AbstractSequentialList<T>
 
 	public ListIterator<T> listIterator() {
 		return listIterator(0);
+	}
+	
+	@Override
+	public String toString() {
+		if (size() == 0) {
+			return "[]";
+		}
+		
+		String str = "[";
+		int i = 0;
+		
+		for (T elem : this) {
+			str += String.valueOf(elem);
+			if (++i < size()) str += ", ";
+		}
+		
+		str += "]";
+		return str;
 	}
 
 	private class CLLNode<E> {
