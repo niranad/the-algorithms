@@ -4,7 +4,7 @@ public class LLNode<T> {
 	T value;
 	LLNode<T> next;
 
-	LLNode(T value) {
+	public LLNode(T value) {
 		this.value = value;
 		this.next = null;
 	}
@@ -15,5 +15,9 @@ public class LLNode<T> {
 	
 	public LLNode<T> getNext() {
 		return next;
+	}
+	
+	public void setNext(LLNode<T> next) {
+		this.next = next;
 	}
 }

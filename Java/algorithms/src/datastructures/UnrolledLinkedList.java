@@ -2,13 +2,13 @@ package datastructures;
 
 import java.io.Serializable;
 import java.util.AbstractSequentialList;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Objects;
+import java.util.NoSuchElementException;
+
 
 /**
  * A two-dimensional {@code LinkedList} containing a
@@ -120,8 +120,13 @@ public class UnrolledLinkedList<E> extends AbstractSequentialList<E>
 	 */
 	@Override
 	public void add(int index, E data) throws IndexOutOfBoundsException {
-		if (index < 0 || index >= size()) {
+		if (index < 0 || index > size()) {
 			throw new IndexOutOfBoundsException();
+		}
+		
+		if (index == size()) {
+			add(data);
+			return;
 		}
 
 		ULLNode<E> current = tail;
@@ -180,7 +185,6 @@ public class UnrolledLinkedList<E> extends AbstractSequentialList<E>
 		ULLNode<E> current = tail;
 		int accumElemCount = current.list.size(); // accumulated sum of elements size in current
 													// block
-
 		while (accumElemCount < (index + 1)) {
 			current = current.previous;
 			accumElemCount += current.list.size();
@@ -193,7 +197,7 @@ public class UnrolledLinkedList<E> extends AbstractSequentialList<E>
 	}
 
 	private void redistributeElems(ULLNode<E> removalList) {
-		if (!Objects.equals(tail, removalList)) {
+		if (tail != removalList) {
 			ULLNode<E> current = removalList;
 			E nextFirst = null;
 			/*
@@ -204,7 +208,7 @@ public class UnrolledLinkedList<E> extends AbstractSequentialList<E>
 				nextFirst = current.next.list.removeFirst();
 				current.list.addLast(nextFirst);
 				current = current.next;
-			} while (!Objects.equals(tail, current));
+			} while (current != tail);
 		}
 
 		// If tail block is empty and not the same as head, remove it
@@ -259,6 +263,11 @@ public class UnrolledLinkedList<E> extends AbstractSequentialList<E>
 
 		return tail.list.getLast();
 	}
+	
+	public E set(int index, E elem) {
+		// TODO
+		return elem;
+	}
 
 	@Override
 	public boolean contains(Object data) {
@@ -284,7 +293,7 @@ public class UnrolledLinkedList<E> extends AbstractSequentialList<E>
 
 	@Override
 	public boolean isEmpty() {
-		return size == 0;
+		return size() == 0;
 	}
 
 	@Override
@@ -309,94 +318,175 @@ public class UnrolledLinkedList<E> extends AbstractSequentialList<E>
 		if (index < 0 || index > size()) {
 			throw new IndexOutOfBoundsException();
 		}
-		
-		ULLNode<E> startNode = tail;
-		int accumElemCount = startNode.list.size();
-		
-		while (accumElemCount < (index + 1)) {
-			startNode = startNode.previous;
+
+		ULLNode<E> startNode = null;
+		int accumElemCount = 0;
+		int nodeIdx = listSize() - 1;
+
+		do {
+			startNode = (nodeIdx == listSize() - 1) ? tail : startNode.previous;
 			accumElemCount += startNode.list.size();
-		}
-		
-		
+			nodeIdx--;
+		} while (startNode.previous != null && accumElemCount < (index + 1));
+
 		final int startIdx = index - 1;
-		
+		final ULLNode<E> startListNode = startNode;
+		final E startElem = startNode.list
+			.get(accumElemCount < (index + 1) ? 0 : (accumElemCount - (index + 1)));
+		final int accumCount = accumElemCount;
+
 		return new ListIterator<E>() {
-			private int totalElements = size();
-			private E currentElem;
-			private ULLNode<E> currentList;
-			private int currElemIdx = startIdx;
-			private int currListIdx =
+			private E elemCursor = startElem;
+			private ULLNode<E> listCursor = startListNode;
+			private int totalElems = size();
+			private int currIndex = startIdx;
+			private int lastReturnedIdx = -1;
+			private int accumSize = accumCount; // Total size of elements up to current node
 			private boolean isIteratorEnd;
-			
-			
+			private boolean canRemove;  // Controls whether the remove operation can be performed
+			private boolean canSet;  // Controls whether replace operation can be performed
+
 			private void checkConcurrentModification() {
-				if (totalElements < size()) {
+				if (totalElems < size()) {
 					throw new ConcurrentModificationException();
 				}
 			}
-			
+
 			@Override
 			public boolean hasNext() {
 				checkConcurrentModification();
-				return (currElemIdx + 1) < size();
+				return (currIndex + 1) < size();
 			}
 
 			@Override
 			public E next() {
 				checkConcurrentModification();
-				
-				ULLNode<E> currNode = tail;
-				
-				
-				if ()
-				return null;
+
+				if (!isIteratorEnd) {
+					canRemove = true;
+					canSet = true;
+
+					// If returning the last element
+					if (currIndex + 1 == size() - 1) {
+						isIteratorEnd = true;
+						currIndex++;
+						lastReturnedIdx = currIndex;
+						return elemCursor;
+					}
+
+					// If listIterator was called with an index equal to size()
+					if (currIndex == size() - 1) {
+						canRemove = false;
+						canSet = false;
+						throw new NoSuchElementException();
+					}
+
+					E next = elemCursor;
+					currIndex++;
+					lastReturnedIdx = currIndex;
+
+					if (accumSize - (currIndex + 2) < 0) {
+						listCursor = listCursor.previous;
+						accumSize += listCursor.list.size();
+					}
+
+					elemCursor = listCursor.list.get(accumSize - (currIndex + 2));
+					return next;
+				}
+
+				throw new NoSuchElementException();
 			}
 
 			@Override
 			public boolean hasPrevious() {
 				checkConcurrentModification();
-				return false;
+				return currIndex >= 0;
 			}
 
 			@Override
 			public E previous() {
 				checkConcurrentModification();
-				return null;
+
+				if (hasPrevious()) {
+					canRemove = true;
+					canSet = true;
+					lastReturnedIdx = currIndex;
+
+					if (isIteratorEnd) {
+						isIteratorEnd = false;
+					}
+
+					if (accumSize - (currIndex + 1) >= listCursor.list.size()) {
+						accumSize -= listCursor.list.size();
+						listCursor = listCursor.next;
+					}
+
+					elemCursor = listCursor.list.get(accumSize - (currIndex + 1));
+					currIndex--;
+					return elemCursor;
+				}
+
+				throw new NoSuchElementException();
 			}
 
 			@Override
 			public int nextIndex() {
 				checkConcurrentModification();
-				return 0;
+				return currIndex + 1;
 			}
 
 			@Override
 			public int previousIndex() {
 				checkConcurrentModification();
-				return 0;
+				return currIndex;
 			}
 
 			@Override
-			public void remove() {
+			public void remove() throws IllegalStateException {
 				checkConcurrentModification();
-
+				
+				if (canRemove) {
+					canSet = false;
+					canRemove = false;
+					UnrolledLinkedList.this.remove(lastReturnedIdx);
+					
+					if (isIteratorEnd) {
+						elemCursor = get(lastReturnedIdx - 1);
+					} else if (size() == 0) {
+						elemCursor = null;
+					} else {
+						elemCursor = get(lastReturnedIdx);
+					}
+					
+					currIndex = lastReturnedIdx - 1;
+					totalElems--;
+					accumSize--;
+				} else {
+					throw new IllegalStateException();
+				}
 			}
 
 			@Override
 			public void set(E e) {
 				checkConcurrentModification();
-
-			}
+				// TODO
+ 			}
 
 			@Override
 			public void add(E e) {
 				checkConcurrentModification();
-
+				canRemove = false;
+				canSet = false;
+				UnrolledLinkedList.this.add(currIndex + 1, e);
+				currIndex++;
+				totalElems++;
+				accumSize++;
 			}
-
 		};
+	}
 
+	public ListIterator<E> listIterator() {
+		return listIterator(0);
 	}
 
 	@Override

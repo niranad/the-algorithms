@@ -35,7 +35,7 @@ public class ValidBrackets {
 		int leftSqRem, int rightSqRem, int leftBraceRem, int rightBraceRem, char[] chars,
 		int index) {
 		if ((leftParenRem < 0 || leftSqRem < 0 || leftBraceRem < 0) || (rightParenRem < leftParenRem
-			|| rightSqRem < leftSqRem || rightBraceRem < leftBraceRem)) {
+			|| rightSqRem < leftSqRem || rightBraceRem < leftBraceRem)) {  // invalid state
 			return;
 		}
 

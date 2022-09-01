@@ -555,7 +555,7 @@ public class CircularLinkedList<T> extends AbstractSequentialList<T>
 			private int currentIndex = index - 1;
 			private int listSize = size();
 			private boolean isListEnd;
-			private boolean canRemoveFromList;
+			private boolean canRemove;  // Indicates whether remove operation can be performed
 
 			@Override
 			public void add(T data) {
@@ -572,8 +572,8 @@ public class CircularLinkedList<T> extends AbstractSequentialList<T>
 					cursor.previous = newNode;
 					size++;
 
-					if (canRemoveFromList) {
-						canRemoveFromList = false;
+					if (canRemove) {
+						canRemove = false;
 					}
 				}
 
@@ -585,7 +585,7 @@ public class CircularLinkedList<T> extends AbstractSequentialList<T>
 			public void remove() throws IllegalStateException {
 				checkConcurrentMod();
 
-				if (!canRemoveFromList) {
+				if (!canRemove) {
 					throw new IllegalStateException();
 				}
 
@@ -618,7 +618,7 @@ public class CircularLinkedList<T> extends AbstractSequentialList<T>
 				currentIndex--;
 				size--;
 				listSize--;
-				canRemoveFromList = false;
+				canRemove = false;
 			}
 
 			private void checkConcurrentMod() {
@@ -646,16 +646,18 @@ public class CircularLinkedList<T> extends AbstractSequentialList<T>
 				if (cursor != null && !isListEnd) {
 					CLLNode<T> current = cursor;
 
-					if (current.next == head) { // If the cursor is at the end of list
-						isListEnd = !isListEnd;
+					if (currentIndex + 1 == size() - 1) { // If the cursor is at the end of list
+						isListEnd = true;
 					}
 
-					if (currentIndex < size() - 1) { // If the cursor position is before the last element
+					// If the cursor position is before the last element
+					if (currentIndex < size() - 1) { 
 						cursor = cursor.next;
 					}
 
-					if (!canRemoveFromList)
-						canRemoveFromList = true;
+					if (!canRemove) {
+						canRemove = true;
+					}
 
 					currentIndex++;
 					lastReturnedElem = current;
@@ -670,7 +672,7 @@ public class CircularLinkedList<T> extends AbstractSequentialList<T>
 				checkConcurrentMod();
 
 				if (cursor != null && currentIndex >= 0) { // If list is not empty or there are more
-													// elements before the cursor
+					// elements before the cursor
 					if (isListEnd) {
 						isListEnd = !isListEnd;
 					}
@@ -678,8 +680,7 @@ public class CircularLinkedList<T> extends AbstractSequentialList<T>
 					CLLNode<T> current;
 					int previousIdx;
 
-					if (listSize - currentIndex > currentIndex) { // If element at index is closer to the start of
-													// list
+					if (listSize - currentIndex > currentIndex) { 
 						current = head;
 						previousIdx = 0;
 						while (currentIndex > previousIdx) {
@@ -695,10 +696,7 @@ public class CircularLinkedList<T> extends AbstractSequentialList<T>
 						}
 					}
 
-					if (!canRemoveFromList) {
-						canRemoveFromList = true;
-					}
-
+					canRemove = true;
 					cursor = current;
 					currentIndex--;
 					lastReturnedElem = current;
@@ -730,21 +728,22 @@ public class CircularLinkedList<T> extends AbstractSequentialList<T>
 	public ListIterator<T> listIterator() {
 		return listIterator(0);
 	}
-	
+
 	@Override
 	public String toString() {
 		if (size() == 0) {
 			return "[]";
 		}
-		
+
 		String str = "[";
 		int i = 0;
-		
+
 		for (T elem : this) {
 			str += String.valueOf(elem);
-			if (++i < size()) str += ", ";
+			if (++i < size())
+				str += ", ";
 		}
-		
+
 		str += "]";
 		return str;
 	}
