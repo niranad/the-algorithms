@@ -2,9 +2,7 @@ package datastructures.test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.security.SecureRandom;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 

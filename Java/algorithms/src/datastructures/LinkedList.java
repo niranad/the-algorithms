@@ -118,7 +118,7 @@ public class LinkedList<T> {
 			return null;
 		}
 
-		T firstValue = head.value;
+		T firstValue = head.data;
 		head = head.next;
 
 		return firstValue;
@@ -138,7 +138,7 @@ public class LinkedList<T> {
 
 		// if the list has only one node
 		if (head.next == null) {
-			lastValue = head.value;
+			lastValue = head.data;
 			head = null;
 			return lastValue;
 		}
@@ -149,7 +149,7 @@ public class LinkedList<T> {
 			current = current.next;
 		}
 
-		lastValue = current.next.value;
+		lastValue = current.next.data;
 		current.next = null;
 
 		return lastValue;
@@ -168,7 +168,7 @@ public class LinkedList<T> {
 			T theNodeValue;
 
 			if (index == 0) {
-				theNodeValue = head.value;
+				theNodeValue = head.data;
 				head = head.next;
 				length = length - 1;
 				return theNodeValue;
@@ -188,7 +188,7 @@ public class LinkedList<T> {
 
 			LLNode<T> theNode = current.next; // node to remove
 			LLNode<T> nodeAfter = theNode.next;
-			theNodeValue = theNode.value;
+			theNodeValue = theNode.data;
 			current.next = nodeAfter;
 			theNode.next = null; // detach the node from succeeding list members
 
@@ -210,7 +210,7 @@ public class LinkedList<T> {
 		}
 
 		// compare value of objects
-		if (head.value.equals(value)) {
+		if (head.data.equals(value)) {
 			head = head.next;
 			return value;
 		}
@@ -218,7 +218,7 @@ public class LinkedList<T> {
 		LLNode<T> current = head;
 
 		// scan the list and stop a node before the node with the given value
-		while (current.next != null && !current.next.value.equals(value)) {
+		while (current.next != null && !current.next.data.equals(value)) {
 			current = current.next;
 		}
 
@@ -250,7 +250,7 @@ public class LinkedList<T> {
 
 			while (current != null) {
 				if (currIdx == index) {
-					return current.value;
+					return current.data;
 				}
 				current = current.next;
 				currIdx++;
@@ -271,7 +271,7 @@ public class LinkedList<T> {
 		int currIdx = 0;
 
 		while (current != null) {
-			if (current.value == value) {
+			if (current.data == value) {
 				return currIdx;
 			}
 			current = current.next;

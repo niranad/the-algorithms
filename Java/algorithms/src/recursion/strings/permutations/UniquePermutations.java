@@ -14,6 +14,7 @@ public class UniquePermutations {
 
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
+		System.out.print("Enter a unique string: ");
 		String uniqueString = scanner.nextLine();
 		System.out.println(uniquePermutations(uniqueString));
 		scanner.close();
@@ -41,14 +42,20 @@ public class UniquePermutations {
 	}
 
 	private static String swap(String s, int idx1, int idx2) {
-		String[] arr = s.split("");
-		if (idx1 != idx2) {
-			String temp = arr[idx1];
-			arr[idx1] = arr[idx2];
-			arr[idx2] = temp;
+		if (idx1 == idx2) {
+			return s;
 		}
 
-		return Arrays.toString(arr).replace("[", "").replace("]", "").replace(", ", "");
+		char[] chars = s.toCharArray();
+		char temp = chars[idx1];
+		chars[idx1] = chars[idx2];
+		chars[idx2] = temp;
+		return String.copyValueOf(chars);
 	}
 
+//	private static ArrayList<String> permutation(String s) {
+//		char[] str = new char[s.length()];
+//	}
+//	
+//	private static ArrayList<String> buildPermuations(ArrayList<String> perms, char[] chars, int index, )
 }

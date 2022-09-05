@@ -36,7 +36,7 @@ public class PermutationSubsequence {
 				if (arePermutations(shortStr, temp)) {
 					locations.add(i - (shortLen - 1));
 				}
-				temp = temp.substring(1);
+				temp = temp.substring(1);  // drop the first char
 			}
 		}
 
@@ -56,6 +56,6 @@ public class PermutationSubsequence {
 	}
 }
 
-/* Runtime Complexity: O((B-S+1)*S + B) ~ O(BS) where B and S are lengths of the 
+/* Runtime Complexity: O((B-S+1)*S) ~ O(BS) where B and S are lengths of the 
  * long and short string respectively.
  */

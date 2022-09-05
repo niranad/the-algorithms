@@ -37,7 +37,7 @@ public class NthNodeFromEnd {
 		}
 
 		if (i - n >= 0) {
-			return pointer1.getValue();
+			return pointer1.getData();
 		}
 		
 		return null;

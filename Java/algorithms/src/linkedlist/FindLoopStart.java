@@ -38,7 +38,7 @@ public class FindLoopStart {
 				fastPtr = fastPtr.getNext();
 			}
 			
-			return slowPtr.getValue();
+			return slowPtr.getData();
 		}
 		
 		return null;
