@@ -2,7 +2,7 @@ package linkedlist;
 
 import datastructures.LLNode;
 
-public class MergeSorted {
+public class RecursiveMergeList {
 
 	public static void main(String[] args) {
 		LLNode<Integer> head1 = new LLNode<>(2);
@@ -16,30 +16,26 @@ public class MergeSorted {
 
 		System.out.println(mergeLists(head1, head2));
 	}
-
+	
 	private static LLNode<Integer> mergeLists(LLNode<Integer> head1, LLNode<Integer> head2) {
+		if (head1 == null) {
+			return head2;
+		}
+		
+		if (head2 == null) {
+			return head1;
+		}
+		
 		LLNode<Integer> head = new LLNode<>(0);
-		LLNode<Integer> current = head;
-
-		while (head1 != null && head2 != null) {
-			if (head1.getData() <= head2.getData()) {
-				current.setNext(head1);
-				head1 = head1.getNext();
-				current = current.getNext();
-			} else {
-				current.setNext(head2);
-				head2 = head2.getNext();
-				current = current.getNext();
-			}
+		
+		if (head1.getData() <= head2.getData()) {
+			head = head1;
+			head.setNext(mergeLists(head1.getNext(), head2));
+		} else {
+			head = head2;
+			head.setNext(mergeLists(head1, head2.getNext()));
 		}
-
-		if (head2 != null) {
-			current.setNext(head2);
-		}
-		if (head1 != null) {
-			current.setNext(head1);
-		}
-
-		return head.getNext();
+		
+		return head;
 	}
 }
