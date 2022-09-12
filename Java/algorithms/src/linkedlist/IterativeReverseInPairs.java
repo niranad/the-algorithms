@@ -20,16 +20,13 @@ public class IterativeReverseInPairs {
 	}
 
 	private static LLNode<Object> reverseInPairs(LLNode<Object> head) {
-		LLNode<Object> next = null,
-			doubleNext = null,
-			prev = null,
-			current = head;
+		LLNode<Object> temp = null, prev = null, current = head;
 
 		while (current != null && current.getNext() != null) {
-			next = current.getNext();
-			doubleNext = next.getNext();
+			LLNode<Object> next = current.getNext();
+			temp = next.getNext();
 			next.setNext(current);
-			current.setNext(doubleNext);
+			current.setNext(temp);
 
 			if (prev != null) {
 				prev.setNext(next);

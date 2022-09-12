@@ -36,15 +36,15 @@ public class InsertInSortedList {
 			return newNode;
 		}
 		
-		LLNode<Integer> temp = null;
+		LLNode<Integer> prev = null;
 		while (current != null && current.getData() <= newNode.getData()) {
-			temp = current;
+			prev = current;
 			current = current.getNext();
 		}
 		
 		newNode.setNext(current);
-		if (temp != null) {
-			temp.setNext(newNode);
+		if (prev != null) {
+			prev.setNext(newNode);
 		} else {
 			head = newNode;
 		}

@@ -9,14 +9,14 @@ import java.util.ListIterator;
 import java.util.NoSuchElementException;
 
 /**
- * This class implements a {@code CircularLinkedList} backed by "sequential
- * access" data store with unidirectional element nodes. {@code Null} elements
- * are not allowed in this list. Each instance of this list can only contain a
- * maximum of {@code Integer.MAX_VALUE} elements. The implementation is similar
- * to that of doubly-linked list except that the end of the list is not
- * indicated with a {@code null} reference but the element with a reference to
- * the head. This variation of {@code LinkedList} is useful for managing system
- * resources and can be used to implement stacks and queues.
+ * This class implements a {@code CircularLinkedList} with bidirectional nodes,
+ * backed by "sequential access" data store with unidirectional element nodes.
+ * {@code Null} elements are not allowed in this list. Each instance of this
+ * list can only contain a maximum of {@code Integer.MAX_VALUE} elements. The
+ * implementation is similar to that of doubly-linked list except that the end
+ * of the list is not indicated with a {@code null} reference but the element
+ * with a reference to the head. This variation of {@code LinkedList} is useful
+ * for managing system resources and can be used to implement stacks and queues.
  *
  * @param <T>
  */
@@ -555,7 +555,7 @@ public class CircularLinkedList<T> extends AbstractSequentialList<T>
 			private int currentIndex = index - 1;
 			private int listSize = size();
 			private boolean isListEnd;
-			private boolean canRemove;  // Indicates whether remove operation can be performed
+			private boolean canRemove; // Indicates whether remove operation can be performed
 
 			@Override
 			public void add(T data) {
@@ -651,7 +651,7 @@ public class CircularLinkedList<T> extends AbstractSequentialList<T>
 					}
 
 					// If the cursor position is before the last element
-					if (currentIndex < size() - 1) { 
+					if (currentIndex < size() - 1) {
 						cursor = cursor.next;
 					}
 
@@ -680,7 +680,7 @@ public class CircularLinkedList<T> extends AbstractSequentialList<T>
 					CLLNode<T> current;
 					int previousIdx;
 
-					if (listSize - currentIndex > currentIndex) { 
+					if (listSize - currentIndex > currentIndex) {
 						current = head;
 						previousIdx = 0;
 						while (currentIndex > previousIdx) {

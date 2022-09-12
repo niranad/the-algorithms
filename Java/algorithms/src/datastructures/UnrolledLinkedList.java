@@ -9,13 +9,12 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 
-
 /**
  * A two-dimensional {@code LinkedList} containing a
- * {@linkplain CircularLinkedList} at each node or block. Each node maintains
- * the property such that its embedded list has no more than
- * {@code Math.sqrt(n)} elements where {@code n} is the total number of elements
- * in this list ({@code null} elements are not allowed).
+ * {@linkplain CircularLinkedList}, a circular doubly linked list, at each node
+ * or block. Each node maintains the property such that its embedded list has no
+ * more than {@code Math.sqrt(n)} elements where {@code n} is the total number
+ * of elements in this list ({@code null} elements are not allowed).
  * 
  * <p>
  * Each instance of this list can store a maximum number of elements equal to
@@ -123,7 +122,7 @@ public class UnrolledLinkedList<E> extends AbstractSequentialList<E>
 		if (index < 0 || index > size()) {
 			throw new IndexOutOfBoundsException();
 		}
-		
+
 		if (index == size()) {
 			add(data);
 			return;
@@ -263,7 +262,7 @@ public class UnrolledLinkedList<E> extends AbstractSequentialList<E>
 
 		return tail.list.getLast();
 	}
-	
+
 	public E set(int index, E elem) {
 		// TODO
 		return elem;
@@ -343,8 +342,8 @@ public class UnrolledLinkedList<E> extends AbstractSequentialList<E>
 			private int lastReturnedIdx = -1;
 			private int accumSize = accumCount; // Total size of elements up to current node
 			private boolean isIteratorEnd;
-			private boolean canRemove;  // Controls whether the remove operation can be performed
-			private boolean canSet;  // Controls whether replace operation can be performed
+			private boolean canRemove; // Controls whether the remove operation can be performed
+			private boolean canSet; // Controls whether replace operation can be performed
 
 			private void checkConcurrentModification() {
 				if (totalElems < size()) {
@@ -444,12 +443,12 @@ public class UnrolledLinkedList<E> extends AbstractSequentialList<E>
 			@Override
 			public void remove() throws IllegalStateException {
 				checkConcurrentModification();
-				
+
 				if (canRemove) {
 					canSet = false;
 					canRemove = false;
 					UnrolledLinkedList.this.remove(lastReturnedIdx);
-					
+
 					if (isIteratorEnd) {
 						elemCursor = get(lastReturnedIdx - 1);
 					} else if (size() == 0) {
@@ -457,7 +456,7 @@ public class UnrolledLinkedList<E> extends AbstractSequentialList<E>
 					} else {
 						elemCursor = get(lastReturnedIdx);
 					}
-					
+
 					currIndex = lastReturnedIdx - 1;
 					totalElems--;
 					accumSize--;
@@ -470,7 +469,7 @@ public class UnrolledLinkedList<E> extends AbstractSequentialList<E>
 			public void set(E e) {
 				checkConcurrentModification();
 				// TODO
- 			}
+			}
 
 			@Override
 			public void add(E e) {

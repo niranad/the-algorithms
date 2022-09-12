@@ -1,7 +1,6 @@
 package recursion.strings.permutations;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 /*
@@ -52,10 +51,4 @@ public class UniquePermutations {
 		chars[idx2] = temp;
 		return String.copyValueOf(chars);
 	}
-
-//	private static ArrayList<String> permutation(String s) {
-//		char[] str = new char[s.length()];
-//	}
-//	
-//	private static ArrayList<String> buildPermuations(ArrayList<String> perms, char[] chars, int index, )
 }
