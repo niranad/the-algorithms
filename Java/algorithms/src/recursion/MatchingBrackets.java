@@ -40,15 +40,17 @@ public class MatchingBrackets {
 		char leftmostBrac = remStr.charAt(0);
 		remStr = remStr.substring(1);
 
-		if (map.containsKey(leftmostBrac)) {  // If leftmost bracket is an open bracket
+		if (map.get(leftmostBrac) != null) {  // If leftmost bracket is an open bracket
 			char currChar = '0';
 			int i = -1;
-
+			
+			// loop to the corresponding closing bracket
 			do {
 				i++;
 				currChar = remStr.charAt(i);
 			} while (map.get(leftmostBrac) != currChar && (i + 1) < remStr.length());
 
+			// remove the corresponding closing bracket and repeat the process
 			if (map.get(leftmostBrac) == currChar) {
 				remStr = remStr.substring(0, i) + remStr.substring(i + 1);
 				return isMatchedBrackets(initialStr, remStr, map);
