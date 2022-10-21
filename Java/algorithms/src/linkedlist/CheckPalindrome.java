@@ -1,6 +1,7 @@
 package linkedlist;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 import datastructures.LLNode;
 
@@ -63,5 +64,30 @@ public class CheckPalindrome {
 		}
 		
 		return i >= j;
+	}
+	
+	
+	// Using stack; if a special character such as X denotes the middle of the list
+	private static boolean listIsPalindrome(LLNode<Object> head) {
+		LLNode<Object> current = head;
+		Stack<Object> stack = new Stack<>();
+		
+		while (current != null && !current.getData().equals('X')) {
+			stack.push(current.getData());
+			current = current.getNext();
+		}
+		
+		current = current.getNext();
+		
+		while (current != null) {
+			if (!current.getData().equals(stack.peek())) {
+				return false;
+			}
+			
+			stack.pop();
+			current = current.getNext();
+		}
+		
+		return true;
 	}
 }

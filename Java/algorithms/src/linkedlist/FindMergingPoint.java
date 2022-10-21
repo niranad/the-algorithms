@@ -48,7 +48,7 @@ public class FindMergingPoint {
 
 		// populate the map
 		while (current1 != null) {
-			if (map.containsKey(current1)) {
+			if (map.get(current1) != null) {
 				map.put(current1, map.get(current1) + 1);
 			} else {
 				map.put(current1, 1);
@@ -59,7 +59,7 @@ public class FindMergingPoint {
 
 		// search the merging point
 		while (current2 != null) {
-			if (map.containsKey(current2)) {
+			if (map.get(current2) != null) {
 				return current2;
 			}
 			current2 = current2.getNext();
