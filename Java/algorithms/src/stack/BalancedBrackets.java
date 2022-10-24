@@ -28,23 +28,17 @@ public class BalancedBrackets {
 
 			if (String.valueOf(curr).matches("[\\(\\[\\{]")) {  // if left bracket
 				stack.push(curr); 
-				i++;
 			} else if (String.valueOf(curr).matches("[\\)\\]\\}]")) {  // if right bracket
-				if (stack.size() == 0) {
+				if (stack.empty()) {
 					return false;
 				}
-
 				char popped = stack.pop();
-
-				if (curr == ')' && popped == '(' || curr == ']' && popped == '['
-					|| curr == '}' && popped == '{') {
-					i++;
-				} else {
+				if (curr != ')' && popped == '(' || curr != ']' && popped == '['
+					|| curr != '}' && popped == '{') {
 					return false;
-				}
-			} else {  // if not bracket
-				i++;
-			}
+				} 
+			} 
+			i++;
 		}
 		
 		return stack.size() == 0;

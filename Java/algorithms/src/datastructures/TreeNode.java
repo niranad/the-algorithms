@@ -16,15 +16,30 @@ public class TreeNode<T extends Comparable<T>> {
 		return data;
 	}
 	
+	public void setData(T data) {
+		if (data == null) {
+			throw new IllegalArgumentException();
+		}
+		this.data = data;
+	}
+	
 	public TreeNode<T> getLeft() {
 		return left;
+	}
+	
+	public void setLeft(TreeNode<T> left) {
+		this.left = left;
 	}
 	
 	public TreeNode<T> getRight() {
 		return right;
 	}
 	
-	T insert(T data) {
+	public void setRight(TreeNode<T> right) {
+		this.right = right;
+	}
+	
+	public T insert(T data) {
 		if (data.compareTo(this.data) < 0) {
 			if (left == null) {
 				left = new TreeNode<T>(data);
@@ -44,7 +59,7 @@ public class TreeNode<T extends Comparable<T>> {
 		return data;
 	}
 	
-	T insert(T data, Comparator<T> comp) {
+	public T insert(T data, Comparator<T> comp) {
 		if (comp.compare(data, this.data) < 0) {
 			if (left == null) {
 				left = new TreeNode<T>(data);
