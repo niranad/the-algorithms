@@ -7,7 +7,7 @@ public class TreeNode<T extends Comparable<T>> {
 	TreeNode<T> left;
 	TreeNode<T> right;
 	
-	TreeNode(T data) {
+	public TreeNode(T data) {
 		this.data = data;
 		left = right = null;
 	}

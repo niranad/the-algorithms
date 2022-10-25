@@ -2,13 +2,13 @@ package datastructures;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Stack;
 
 public class BinarySearchTree<T extends Comparable<T>> {
 	private TreeNode<T> root;
 	private int size;
-	private int depth;
-	private int leftSubtreeDepth;
-	private int rightSubtreeDepth;
 
 	public BinarySearchTree() {
 		root = null;
@@ -18,11 +18,33 @@ public class BinarySearchTree<T extends Comparable<T>> {
 		return root;
 	}
 
-	protected void setRoot(TreeNode<T> root) throws UnsupportedOperationException {
-		if (!(this instanceof BalancedBST)) {
-			throw new UnsupportedOperationException();
-		}
+	/**
+	 * Sets the root of this binary search tree to a node of the type
+	 * {@code TreeNode}. The resulting tree from this operation is not guaranteed to
+	 * maintain the property of a {@code BinarySearchTree} ADT.
+	 * 
+	 * @param root
+	 */
+	public void setRoot(TreeNode<T> root) {
+		if (root == null) return;
 		this.root = root;
+		Queue<TreeNode<T>> queue = new LinkedList<>();
+		int size = 1;
+		queue.offer(root);
+		
+		while (!queue.isEmpty()) {
+			TreeNode<T> curr = queue.poll();
+			if (curr.left != null) {
+				queue.offer(curr.left);
+				size++;
+			}
+			if (curr.right != null) {
+				queue.offer(curr.right);
+				size++;
+			}
+		}
+		
+		this.size = size;
 	}
 
 	/**
@@ -117,21 +139,35 @@ public class BinarySearchTree<T extends Comparable<T>> {
 	}
 
 	public int getDepth() {
-		leftSubtreeDepth = 0;
-		rightSubtreeDepth = 0;
+		if (root == null)
+			return 0;
+		Stack<TreeNode<T>> stack = new Stack<>();
+		TreeNode<T> prev = null;
+		int maxHeight = 0;
+		stack.push(root);
 
-		traverseLeftSubtree(root);
-		traverseRightSubtree(root);
-
-		if (leftSubtreeDepth > rightSubtreeDepth) {
-			depth = leftSubtreeDepth;
-		} else if (rightSubtreeDepth > leftSubtreeDepth) {
-			depth = rightSubtreeDepth;
-		} else {
-			depth = leftSubtreeDepth;
+		while (!stack.empty()) {
+			TreeNode<T> curr = stack.peek();
+			if (prev == null || prev.left == curr || prev.right == curr) {
+				if (curr.left != null) {
+					stack.push(curr.left);
+				} else if (curr.right != null) {
+					stack.push(curr.right);
+				}
+			} else if (prev == curr.left) {
+				if (curr.right != null) {
+					stack.push(curr.right);
+				}
+			} else {
+				if (stack.size() > maxHeight) {
+					maxHeight = stack.size();
+				}
+				stack.pop();
+			}
+			prev = curr;
 		}
 
-		return depth;
+		return maxHeight - 1;
 	}
 
 	public T findMin() {
@@ -162,26 +198,8 @@ public class BinarySearchTree<T extends Comparable<T>> {
 		}
 	}
 
-	private void traverseLeftSubtree(TreeNode<T> node) {
-		if (node == null) {
-			return;
-		}
-
-		++leftSubtreeDepth;
-		traverseLeftSubtree(node.left);
-	}
-
-	private void traverseRightSubtree(TreeNode<T> node) {
-		if (node == null) {
-			return;
-		}
-
-		++rightSubtreeDepth;
-		traverseRightSubtree(node.right);
-	}
-
 	public String levelOrderTraversal() {
-		Queue<TreeNode<T>> queue = new Queue<>();
+		Queue<TreeNode<T>> queue = new LinkedList<>();
 		ArrayList<T> outputTree = new ArrayList<>();
 
 		queue.offer(root);
@@ -206,33 +224,37 @@ public class BinarySearchTree<T extends Comparable<T>> {
 	public boolean delete(T item) {
 		int size = size();
 		deleteNode(item, root);
-		
+
 		return size != size();
 	}
-	
+
 	private TreeNode<T> deleteNode(T item, TreeNode<T> root) {
-		if (root == null) return root;
-		else if (item.compareTo(root.data) < 0) {  // if item is less than current, search left subtree
+		if (root == null)
+			return root;
+		else if (item.compareTo(root.data) < 0) { // if item is less than current, search left
+													// subtree
 			root.left = deleteNode(item, root.left);
-		} else if (item.compareTo(root.data) > 0) {  // if item is greater than current, search right subtree
+		} else if (item.compareTo(root.data) > 0) { // if item is greater than current, search right
+													// subtree
 			root.right = deleteNode(item, root.right);
 		} else {
-			if (root.left == null && root.right == null) {  // if item node is a leaf node
+			if (root.left == null && root.right == null) { // if item node is a leaf node
 				root = null;
-			} else if (root.left == null) {  // if item node has only a  right child
+			} else if (root.left == null) { // if item node has only a right child
 				root = root.right;
-			} else if (root.right == null) {  // if item node has only a left child
+			} else if (root.right == null) { // if item node has only a left child
 				root = root.left;
-			} else {  // if item node has two children, replace with closest in value from either subtree
+			} else { // if item node has two children, replace with closest in value from either
+						// subtree
 				TreeNode<T> current = root.right;
-				while (current.left != null) current = current.left;
+				while (current.left != null)
+					current = current.left;
 				root.data = current.data;
 				root.right = deleteNode(current.data, root.right);
 			}
 		}
 		return root;
 	}
-
 
 	/**
 	 * Returns the {@code size} of the binary search tree. It traverses the tree by
@@ -285,13 +307,13 @@ public class BinarySearchTree<T extends Comparable<T>> {
 
 		return currNode != null ? currNode.data : null;
 	}
-	
+
 	public void levelOrderOutputTree() {
 		levelOrderOutput(root, 40);
 	}
 
 	private void levelOrderOutput(TreeNode<T> node, int spaces) {
-		Queue<TreeNode<T>> queue = new Queue<>();
+		Queue<TreeNode<T>> queue = new LinkedList<>();
 
 		queue.offer(node);
 
@@ -300,13 +322,13 @@ public class BinarySearchTree<T extends Comparable<T>> {
 				System.out.print(" ");
 			}
 
-			Queue<TreeNode<T>> utilQueue = new Queue<>();
+			Queue<TreeNode<T>> utilQueue = new LinkedList<>();
 
 			while (!queue.isEmpty()) {
 				utilQueue.offer(queue.poll());
 			}
 
-			Queue<TreeNode<T>> utilQueue2 = new Queue<>();
+			Queue<TreeNode<T>> utilQueue2 = new LinkedList<>();
 
 			while (!utilQueue.isEmpty()) {
 				System.out.printf("%s       ", utilQueue.peek().data);
@@ -352,4 +374,3 @@ public class BinarySearchTree<T extends Comparable<T>> {
 		return preorderTraversal();
 	}
 }
-
